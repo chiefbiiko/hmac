@@ -2,6 +2,8 @@ import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1/mod.ts";
 import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256/mod.ts";
 import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512/mod.ts";
 
+const encoder: TextEncoder = new TextEncoder();
+
 const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
 const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
 const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
@@ -10,8 +12,8 @@ const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
 export interface Hash {
   hashSize: number;
   init(): Hash;
-  update(msg?: Uint8Array): Hash;
-  digest(msg?: Uint8Array): Uint8Array;
+  update(msg?: string | Uint8Array): Hash;
+  digest(msg?: string | Uint8Array): Uint8Array;
 }
 
 /** A class representation of the HMAC algorithm. */
@@ -35,7 +37,13 @@ export class HMAC {
   }
 
   /** Initializes an HMAC instance. */
-  init(key: Uint8Array): HMAC {
+  init(key: string | Uint8Array): HMAC {
+    if (!key) {
+      key = new Uint8Array(0);
+    } else if (typeof key === "string") {
+      key = encoder.encode(key) as Uint8Array;
+    }
+    
     // process the key
     let _key: Uint8Array = new Uint8Array(key);
 
@@ -72,15 +80,20 @@ export class HMAC {
   }
 
   /** Update the HMAC with additional message data. */
-  update(msg?: Uint8Array): HMAC {
-    msg = msg || new Uint8Array(0);
+  update(msg?: string | Uint8Array): HMAC {
+    if (!msg) {
+      msg = new Uint8Array(0);
+    } else if (typeof msg === "string") {
+      msg = encoder.encode(msg) as Uint8Array;
+    }
+    
     this.hasher.update(msg);
 
     return this;
   }
 
   /** Finalize the HMAC with additional message data. */
-  digest(msg?: Uint8Array): Uint8Array {
+  digest(msg?: string | Uint8Array): Uint8Array {
     msg = msg || new Uint8Array(0);
 
     const sum1: Uint8Array = this.hasher.digest(msg); // get sum 1
@@ -93,8 +106,8 @@ export class HMAC {
 /** Returns a HMAC of the given msg and key using the indicated hash. */
 export function hmac(
   hash: string,
-  key: Uint8Array,
-  msg?: Uint8Array
+  key: string | Uint8Array,
+  msg?: string | Uint8Array
 ): Uint8Array {
   if (SHA1_REGEX.test(hash)) {
     return new HMAC(new SHA1()).init(key).digest(msg);
