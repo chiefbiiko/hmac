@@ -1,10 +1,10 @@
-import { SHA1 } from "./../sha1/mod.ts"; // "https://denopkg.com/chiefbiiko/sha1/mod.ts"
-import { SHA256 } from "./../sha256/mod.ts"; // "https://denopkg.com/chiefbiiko/sha256/mod.ts"
-import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512/mod.ts"
+import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1/mod.ts";
+import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256/mod.ts";
+import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512/mod.ts";
 
-const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i
-const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i
-const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i
+const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
+const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
+const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
 
 /** An interface representation of a hash algorithm implementation. */
 export interface Hash {
@@ -23,13 +23,13 @@ export class HMAC {
 
   private iKeyPad: Uint8Array;
   private oKeyPad: Uint8Array;
-  private hasher: Hash
+  private hasher: Hash;
 
   /** Creates a new HMAC instance. */
   constructor(hasher: Hash) {
     this.hashSize = hasher.hashSize;
     this.hasher = hasher;
-    this.B = this.hashSize <= 32 ? 64 : 128;   // according to RFC4868
+    this.B = this.hashSize <= 32 ? 64 : 128; // according to RFC4868
     this.iPad = 0x36;
     this.oPad = 0x5c;
   }
@@ -62,7 +62,7 @@ export class HMAC {
     }
 
     // blackout key
-    _key.fill(0)
+    _key.fill(0);
 
     // initial hash
     this.hasher.init();
@@ -83,7 +83,7 @@ export class HMAC {
   digest(msg?: Uint8Array): Uint8Array {
     msg = msg || new Uint8Array(0);
 
-    const sum1: Uint8Array = this.hasher.digest(msg);   // get sum 1
+    const sum1: Uint8Array = this.hasher.digest(msg); // get sum 1
     this.hasher.init();
 
     return this.hasher.update(this.oKeyPad).digest(sum1);
@@ -91,14 +91,20 @@ export class HMAC {
 }
 
 /** Returns a HMAC of the given msg and key using the indicated hash. */
-export function hmac(hash: string, key: Uint8Array, msg?: Uint8Array): Uint8Array {
+export function hmac(
+  hash: string,
+  key: Uint8Array,
+  msg?: Uint8Array
+): Uint8Array {
   if (SHA1_REGEX.test(hash)) {
-    return new HMAC(new SHA1()).init(key).digest(msg)
+    return new HMAC(new SHA1()).init(key).digest(msg);
   } else if (SHA256_REGEX.test(hash)) {
-return new HMAC(new SHA256()).init(key).digest(msg)
+    return new HMAC(new SHA256()).init(key).digest(msg);
   } else if (SHA512_REGEX.test(hash)) {
-return new HMAC(new SHA512()).init(key).digest(msg)
+    return new HMAC(new SHA512()).init(key).digest(msg);
   } else {
-    throw new TypeError(`Unsupported hash ${hash}. Must be one of SHA(1|256|512).`)
+    throw new TypeError(
+      `Unsupported hash ${hash}. Must be one of SHA(1|256|512).`
+    );
   }
 }

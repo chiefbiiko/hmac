@@ -25,53 +25,70 @@ function hex2buf(hex: string): Uint8Array {
   return buf;
 }
 
-function loadTestVectors(): {[key:string]: TestVector[]} {
-  const doc: {[key:string]: any[]} = JSON.parse(
+function loadTestVectors(): { [key: string]: TestVector[] } {
+  const doc: { [key: string]: any[] } = JSON.parse(
     new TextDecoder().decode(Deno.readFileSync("./test_vectors.json"))
-  )
+  );
   for (const [k, v] of Object.entries(doc)) {
-    doc[k] = v.map(({count, keyByteLength, macByteLength, key, msg, mac }): TestVector => ({
-      count,
+    doc[k] = v.map(
+      ({ count, keyByteLength, macByteLength, key, msg, mac }): TestVector => ({
+        count,
         keyByteLength,
         macByteLength,
         key: hex2buf(key),
         msg: hex2buf(msg),
         mac: hex2buf(mac)
-      }))
+      })
+    );
   }
-  return doc
+  return doc;
 }
 
-const testVectors: {[key:string]: TestVector[]} = loadTestVectors();
+const testVectors: { [key: string]: TestVector[] } = loadTestVectors();
 
-testVectors["HMAC-SHA1"].forEach(({ macByteLength, key, msg, mac: expectedMac }: TestVector, i: number): void => {
-  test({
-    name: `HMAC-SHA1 ${i}`,
-    fn(): void {
-      const mac: Uint8Array = hmac("sha1", key, msg);
-      assertEquals(mac.subarray(0, macByteLength), expectedMac);
-    }
-  })
-})
+testVectors["HMAC-SHA1"].forEach(
+  (
+    { macByteLength, key, msg, mac: expectedMac }: TestVector,
+    i: number
+  ): void => {
+    test({
+      name: `HMAC-SHA1 ${i}`,
+      fn(): void {
+        const mac: Uint8Array = hmac("sha1", key, msg);
+        assertEquals(mac.subarray(0, macByteLength), expectedMac);
+      }
+    });
+  }
+);
 
-testVectors["HMAC-SHA256"].forEach(({ macByteLength, key, msg, mac: expectedMac }: TestVector, i: number): void => {
-  test({
-    name: `HMAC-SHA256 ${i}`,
-    fn(): void {
-      const mac: Uint8Array = hmac("sha256", key, msg);
-      assertEquals(mac.subarray(0, macByteLength), expectedMac);
-    }
-  })
-})
+testVectors["HMAC-SHA256"].forEach(
+  (
+    { macByteLength, key, msg, mac: expectedMac }: TestVector,
+    i: number
+  ): void => {
+    test({
+      name: `HMAC-SHA256 ${i}`,
+      fn(): void {
+        const mac: Uint8Array = hmac("sha256", key, msg);
+        assertEquals(mac.subarray(0, macByteLength), expectedMac);
+      }
+    });
+  }
+);
 
-testVectors["HMAC-SHA512"].forEach(({ macByteLength, key, msg, mac: expectedMac }: TestVector, i: number): void => {
-  test({
-    name: `HMAC-SHA512 ${i}`,
-    fn(): void {
-      const mac: Uint8Array = hmac("sha512", key, msg);
-      assertEquals(mac.subarray(0, macByteLength), expectedMac);
-    }
-  })
-})
+testVectors["HMAC-SHA512"].forEach(
+  (
+    { macByteLength, key, msg, mac: expectedMac }: TestVector,
+    i: number
+  ): void => {
+    test({
+      name: `HMAC-SHA512 ${i}`,
+      fn(): void {
+        const mac: Uint8Array = hmac("sha512", key, msg);
+        assertEquals(mac.subarray(0, macByteLength), expectedMac);
+      }
+    });
+  }
+);
 
-runIfMain(import.meta, { parallel: true })
+runIfMain(import.meta, { parallel: true });
