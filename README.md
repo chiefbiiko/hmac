@@ -7,16 +7,12 @@
 ``` ts
 import { hmac } from "https://denopkg.com/chiefbiiko/hmac/mod.ts";
 
-const key: Uint8Array = new Uint8Array(32).fill(99)
-const msg: Uint8Array = new Uint8Array(128).fill(77)
-
-// the simple way
-const mac: Uint8Array = hmac("sha256", key, msg);
+console.log("HMAC-SHA256 example", hmac("sha256", "fraud", "money"));
 ```
 
 ## API
 
-Groundwork:
+Prep: a generic representation of a hash algorithm implementation.
 
 ``` ts
 export interface Hash {
@@ -42,6 +38,10 @@ Updates the instance with a message block.
 ### `HMAC#digest(msg?: Uint8Array): Uint8Array`
 
 Obtain a hash based message authentication tag.
+
+### `hmac(hash: string, key: string | Uint8Array, msg?: string | Uint8Array): Uint8Array`
+
+Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants.
 
 ## License
 
