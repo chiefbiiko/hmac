@@ -23,23 +23,23 @@ export interface Hash {
 }
 ```
 
-### `new HMAC(hasher: Hash)`
+#### `new HMAC(hasher: Hash)`
 
 Creates a `HMAC` instance.
 
-### `HMAC#init(key: Uint8Array): HMAC`
+#### `HMAC#init(key: Uint8Array): HMAC`
 
 Initializes a `HMAC` instance.
 
-### `HMAC#update(msg?: Uint8Array): HMAC`
+#### `HMAC#update(msg?: Uint8Array): HMAC`
 
 Updates the instance with a message block.
 
-### `HMAC#digest(msg?: Uint8Array): Uint8Array`
+#### `HMAC#digest(msg?: Uint8Array): Uint8Array`
 
 Obtain a hash based message authentication tag.
 
-### `hmac(hash: string, key: string | Uint8Array, msg?: string | Uint8Array): Uint8Array`
+#### `hmac(hash: string, key: string | Uint8Array, msg?: string | Uint8Array): Uint8Array`
 
 Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants.
 
