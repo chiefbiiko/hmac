@@ -23,25 +23,24 @@ export interface Hash {
 }
 ```
 
-#### `new HMAC(hasher: Hash)`
+#### `new HMAC(hasher: Hash, key?: string | Uint8Array)`
 
-Creates a `HMAC` instance.
+Creates a `HMAC` instance. If you pass a `key` the instance gets initialized.
 
-#### `HMAC#init(key: Uint8Array): HMAC`
+#### `HMAC#init(key: Uint8Array, inputEncoding?: string): HMAC`
 
-Initializes a `HMAC` instance.
+Initializes a `HMAC` instance. `inputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`.
 
-#### `HMAC#update(msg?: Uint8Array): HMAC`
+#### `HMAC#update(msg?: string | Uint8Array, inputEncoding?: string): HMAC`
 
-Updates the instance with a message block.
+Updates the instance with a message block. `inputEncoding` can be one of `"utf8"`, `"hex"`, or `"base64"`.
 
-#### `HMAC#digest(msg?: Uint8Array): Uint8Array`
+#### `HMAC#digest(outputEncoding?: string): string | Uint8Array `
 
 Obtain a hash based message authentication tag.
 
-#### `hmac(hash: string, key: string | Uint8Array, msg?: string | Uint8Array): Uint8Array`
-
-Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants.
+#### `hmac(hash: string, key: string | Uint8Array, msg?: string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
+Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants. `key` and `msg` must have the same encoding if they are strings.
 
 ## License
 

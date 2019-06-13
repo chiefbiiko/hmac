@@ -1,8 +1,10 @@
 import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1/mod.ts";
 import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256/mod.ts";
 import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512/mod.ts";
-
-const encoder: TextEncoder = new TextEncoder();
+import {
+  encode,
+  decode
+} from "https://denopkg.com/chiefbiiko/std-encoding/mod.ts";
 
 const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
 const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
@@ -12,8 +14,8 @@ const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
 export interface Hash {
   hashSize: number;
   init(): Hash;
-  update(msg?: string | Uint8Array): Hash;
-  digest(msg?: string | Uint8Array): Uint8Array;
+  update(msg?: string | Uint8Array, inputEncoding?: string): Hash;
+  digest(outputEncoding?: string): string | Uint8Array;
 }
 
 /** A class representation of the HMAC algorithm. */
@@ -28,29 +30,33 @@ export class HMAC {
   private hasher: Hash;
 
   /** Creates a new HMAC instance. */
-  constructor(hasher: Hash) {
+  constructor(hasher: Hash, key?: string | Uint8Array) {
     this.hashSize = hasher.hashSize;
     this.hasher = hasher;
     this.B = this.hashSize <= 32 ? 64 : 128; // according to RFC4868
     this.iPad = 0x36;
     this.oPad = 0x5c;
+
+    if (key) {
+      this.init(key);
+    }
   }
 
   /** Initializes an HMAC instance. */
-  init(key: string | Uint8Array): HMAC {
+  init(key: string | Uint8Array, inputEncoding?: string): HMAC {
     if (!key) {
       key = new Uint8Array(0);
     } else if (typeof key === "string") {
-      key = encoder.encode(key) as Uint8Array;
+      key = encode(key, inputEncoding) as Uint8Array;
     }
-    
+
     // process the key
     let _key: Uint8Array = new Uint8Array(key);
 
     if (_key.length > this.B) {
       // keys longer than blocksize are shortened
       this.hasher.init();
-      _key = this.hasher.digest(key);
+      _key = this.hasher.update(key).digest() as Uint8Array;
     }
 
     // zeropadr
@@ -80,26 +86,28 @@ export class HMAC {
   }
 
   /** Update the HMAC with additional message data. */
-  update(msg?: string | Uint8Array): HMAC {
+  update(msg?: string | Uint8Array, inputEncoding?: string): HMAC {
     if (!msg) {
       msg = new Uint8Array(0);
     } else if (typeof msg === "string") {
-      msg = encoder.encode(msg) as Uint8Array;
+      msg = encode(msg, inputEncoding) as Uint8Array;
     }
-    
+
     this.hasher.update(msg);
 
     return this;
   }
 
   /** Finalize the HMAC with additional message data. */
-  digest(msg?: string | Uint8Array): Uint8Array {
-    msg = msg || new Uint8Array(0);
-
-    const sum1: Uint8Array = this.hasher.digest(msg); // get sum 1
+  digest(outputEncoding?: string): string | Uint8Array {
+    const sum1: Uint8Array = this.hasher /*.update(msg)*/
+      .digest() as Uint8Array; // get sum 1
     this.hasher.init();
 
-    return this.hasher.update(this.oKeyPad).digest(sum1);
+    return this.hasher
+      .update(this.oKeyPad)
+      .update(sum1)
+      .digest(outputEncoding);
   }
 }
 
@@ -107,14 +115,25 @@ export class HMAC {
 export function hmac(
   hash: string,
   key: string | Uint8Array,
-  msg?: string | Uint8Array
-): Uint8Array {
+  msg?: string | Uint8Array,
+  inputEncoding?: string,
+  outputEncoding?: string
+): string | Uint8Array {
   if (SHA1_REGEX.test(hash)) {
-    return new HMAC(new SHA1()).init(key).digest(msg);
+    return new HMAC(new SHA1())
+      .init(key, inputEncoding)
+      .update(msg, inputEncoding)
+      .digest(outputEncoding);
   } else if (SHA256_REGEX.test(hash)) {
-    return new HMAC(new SHA256()).init(key).digest(msg);
+    return new HMAC(new SHA256())
+      .init(key, inputEncoding)
+      .update(msg, inputEncoding)
+      .digest(outputEncoding);
   } else if (SHA512_REGEX.test(hash)) {
-    return new HMAC(new SHA512()).init(key).digest(msg);
+    return new HMAC(new SHA512())
+      .init(key, inputEncoding)
+      .update(msg, inputEncoding)
+      .digest(outputEncoding);
   } else {
     throw new TypeError(
       `Unsupported hash ${hash}. Must be one of SHA(1|256|512).`
