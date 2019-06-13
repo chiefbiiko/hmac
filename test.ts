@@ -54,7 +54,7 @@ testVectors["HMAC-SHA1"].forEach(
     test({
       name: `HMAC-SHA1 ${i}`,
       fn(): void {
-        const mac: Uint8Array = hmac("sha1", key, msg);
+        const mac: any = hmac("sha1", key, msg);
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
     });
@@ -69,7 +69,7 @@ testVectors["HMAC-SHA256"].forEach(
     test({
       name: `HMAC-SHA256 ${i}`,
       fn(): void {
-        const mac: Uint8Array = hmac("sha256", key, msg);
+        const mac: any = hmac("sha256", key, msg);
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
     });
@@ -84,7 +84,7 @@ testVectors["HMAC-SHA512"].forEach(
     test({
       name: `HMAC-SHA512 ${i}`,
       fn(): void {
-        const mac: Uint8Array = hmac("sha512", key, msg);
+        const mac: any = hmac("sha512", key, msg);
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
     });
