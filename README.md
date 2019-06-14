@@ -18,9 +18,9 @@ Prep: a generic representation of a hash algorithm implementation.
 export interface Hash {
   hashSize: number;
   init(): Hash;
-  update(msg?: Uint8Array): Hash;
-  digest(msg?: Uint8Array): Uint8Array;
-}
+  update(msg: string | Uint8Array, inputEncoding?: string): Hash;
+  digest(outputEncoding?: string): string | Uint8Array;
+}s
 ```
 
 #### `new HMAC(hasher: Hash, key?: string | Uint8Array)`

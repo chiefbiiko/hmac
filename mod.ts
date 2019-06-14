@@ -14,7 +14,7 @@ const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
 export interface Hash {
   hashSize: number;
   init(): Hash;
-  update(msg?: string | Uint8Array, inputEncoding?: string): Hash;
+  update(msg: string | Uint8Array, inputEncoding?: string): Hash;
   digest(outputEncoding?: string): string | Uint8Array;
 }
 
