@@ -86,9 +86,9 @@ export class HMAC {
   }
 
   /** Update the HMAC with additional message data. */
-  update(msg?: string | Uint8Array, inputEncoding?: string): HMAC {
-    if (!msg) {
-      msg = new Uint8Array(0);
+  update(msg: string | Uint8Array, inputEncoding?: string): HMAC {
+    if (msg === null) {
+      throw new TypeError("msg must not be null.");
     } else if (typeof msg === "string") {
       msg = encode(msg, inputEncoding) as Uint8Array;
     }
