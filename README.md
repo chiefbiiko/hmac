@@ -1,6 +1,6 @@
 # hmac
 
-[![Travis](http://img.shields.io/travis/chiefbiiko/hmac.svg?style=flat)](http://travis-ci.org/chiefbiiko/hmac) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/chiefbiiko/hmac?branch=master&svg=true)](https://ci.appveyor.com/project/chiefbiiko/hmac)
+![ci](https://github.com/chiefbiiko/hmac/workflows/ci/badge.svg)
 
 ## Usage
 
