@@ -13,6 +13,6 @@ jobs:
       - name: clone repo
         uses: actions/checkout@v1.0.0
       - name: install deno
-        uses: denolib/setup-deno@v1
+        uses: denolib/setup-deno@v1.1.0
       - name: run tests
         run: deno run --allow-read ./test.ts
