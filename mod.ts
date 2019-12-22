@@ -1,7 +1,7 @@
-import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1/mod.ts";
-import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256/mod.ts";
-import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512/mod.ts";
-import { encode } from "https://denopkg.com/chiefbiiko/std-encoding/mod.ts";
+import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1@v1.0.1/mod.ts";
+import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256@v1.0.0/mod.ts";
+import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512@v1.0.0/mod.ts";
+import { encode } from "https://denopkg.com/chiefbiiko/std-encoding@v1.0.0/mod.ts";
 
 const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
 const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
