@@ -15,4 +15,4 @@ jobs:
       - name: install deno
         uses: denolib/setup-deno@v1.1.0
       - name: run tests
-        run: deno run --allow-read ./test.ts
+        run: deno test

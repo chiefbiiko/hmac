@@ -22,8 +22,8 @@ export class HMAC {
   readonly iPad: number;
   readonly oPad: number;
 
-  private iKeyPad: Uint8Array;
-  private oKeyPad: Uint8Array;
+  private iKeyPad!: Uint8Array;
+  private oKeyPad!: Uint8Array;
   private hasher: Hash;
 
   /** Creates a new HMAC instance. */
@@ -112,7 +112,7 @@ export class HMAC {
 export function hmac(
   hash: string,
   key: string | Uint8Array,
-  msg?: string | Uint8Array,
+  msg: string | Uint8Array,
   inputEncoding?: string,
   outputEncoding?: string
 ): string | Uint8Array {
