@@ -1,7 +1,4 @@
-import { SHA1 } from "https://denopkg.com/chiefbiiko/sha1@v1.0.1/mod.ts";
-import { SHA256 } from "https://denopkg.com/chiefbiiko/sha256@v1.0.0/mod.ts";
-import { SHA512 } from "https://denopkg.com/chiefbiiko/sha512@v1.0.0/mod.ts";
-import { encode } from "https://denopkg.com/chiefbiiko/std-encoding@v1.0.0/mod.ts";
+import { SHA1, SHA256, SHA512, encode } from "./deps.ts";
 
 const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
 const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
@@ -22,8 +19,8 @@ export class HMAC {
   readonly iPad: number;
   readonly oPad: number;
 
-  private iKeyPad: Uint8Array;
-  private oKeyPad: Uint8Array;
+  private iKeyPad!: Uint8Array;
+  private oKeyPad!: Uint8Array;
   private hasher: Hash;
 
   /** Creates a new HMAC instance. */
@@ -83,10 +80,11 @@ export class HMAC {
   }
 
   /** Update the HMAC with additional message data. */
-  update(msg: string | Uint8Array, inputEncoding?: string): HMAC {
-    if (msg === null) {
-      throw new TypeError("msg must not be null.");
-    } else if (typeof msg === "string") {
+  update(
+    msg: string | Uint8Array = new Uint8Array(0),
+    inputEncoding?: string
+  ): HMAC {
+    if (typeof msg === "string") {
       msg = encode(msg, inputEncoding) as Uint8Array;
     }
 
@@ -97,8 +95,8 @@ export class HMAC {
 
   /** Finalize the HMAC with additional message data. */
   digest(outputEncoding?: string): string | Uint8Array {
-    const sum1: Uint8Array = this.hasher /*.update(msg)*/
-      .digest() as Uint8Array; // get sum 1
+    const sum1: Uint8Array = this.hasher.digest() as Uint8Array; // get sum 1
+
     this.hasher.init();
 
     return this.hasher
