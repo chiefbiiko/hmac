@@ -4,6 +4,12 @@ const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
 const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
 const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
 
+export enum HashType {
+  SHA1,
+  SHA256,
+  SHA512
+}
+
 /** An interface representation of a hash algorithm implementation. */
 export interface Hash {
   hashSize: number;
@@ -108,30 +114,31 @@ export class HMAC {
 
 /** Returns a HMAC of the given msg and key using the indicated hash. */
 export function hmac(
-  hash: string,
+  hash: HashType,
   key: string | Uint8Array,
   msg?: string | Uint8Array,
   inputEncoding?: string,
   outputEncoding?: string
 ): string | Uint8Array {
-  if (SHA1_REGEX.test(hash)) {
-    return new HMAC(new SHA1())
-      .init(key, inputEncoding)
-      .update(msg, inputEncoding)
-      .digest(outputEncoding);
-  } else if (SHA256_REGEX.test(hash)) {
-    return new HMAC(new SHA256())
-      .init(key, inputEncoding)
-      .update(msg, inputEncoding)
-      .digest(outputEncoding);
-  } else if (SHA512_REGEX.test(hash)) {
-    return new HMAC(new SHA512())
-      .init(key, inputEncoding)
-      .update(msg, inputEncoding)
-      .digest(outputEncoding);
-  } else {
-    throw new TypeError(
-      `Unsupported hash ${hash}. Must be one of SHA(1|256|512).`
-    );
+  switch(hash) {
+    case HashType.SHA1:
+      return new HMAC(new SHA1())
+        .init(key, inputEncoding)
+        .update(msg, inputEncoding)
+        .digest(outputEncoding);
+    case HashType.SHA256:
+      return new HMAC(new SHA256())
+        .init(key, inputEncoding)
+        .update(msg, inputEncoding)
+        .digest(outputEncoding);
+    case HashType.SHA512:
+      return new HMAC(new SHA512())
+        .init(key, inputEncoding)
+        .update(msg, inputEncoding)
+        .digest(outputEncoding);
+    default:
+      throw new TypeError(
+        `Unsupported hash ${hash}. Must be one of SHA(1|256|512).`
+      );
   }
 }
