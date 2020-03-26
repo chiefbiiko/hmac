@@ -7,7 +7,7 @@ export enum Hash {
 }
 
 /** An interface representation of a hash algorithm implementation. */
-interface _Hash {
+export interface _Hash {
   hashSize: number;
   init(): _Hash;
   update(msg: string | Uint8Array, inputEncoding?: string): _Hash;

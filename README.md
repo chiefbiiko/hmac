@@ -12,11 +12,11 @@ console.log("HMAC-SHA256 example", hmac("sha256", "key", "msg", "utf8", "hex"));
 
 ## API
 
-#### `hmac(hash: HashType, key: string | Uint8Array, msg: string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
+#### `hmac(hash: Hash, key: string | Uint8Array, msg: string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
 
-Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants. If `key` or `msg` is a string, `inputEncoding` can be one of `"utf8"` (fallback), `"hex"`, or `"base64"`. `key` and `msg` must have the same encoding if they are both strings.
+Convenience function for macing singular data. If `key` or `msg` is a string, `inputEncoding` can be one of `"utf8"` (fallback), `"hex"`, or `"base64"`. `key` and `msg` must have the same encoding if they are both strings.
 
-#### `new HMAC(hasher: Hash, key?: string | Uint8Array)`
+#### `new HMAC(hasher: _Hash, key?: string | Uint8Array)`
 
 Creates a `HMAC` instance. If you pass a `key` the instance gets initialized. See below for a definition of the `Hash` interface.
 
@@ -32,15 +32,27 @@ Updates the instance with a message block. If `msg` is a string, `inputEncoding`
 
 Obtain a hash based message authentication tag.
 
-#### `interface Hash`
+#### `enum Hash`
+
+This enum contains all valid Hash types.
+
+``` ts
+export enum Hash {
+  SHA1,
+  SHA256,
+  SHA512
+}
+```
+
+#### `interface _Hash`
 
 A generic representation of a hash algorithm implementation.
 
 ``` ts
-export interface Hash {
+export interface _Hash {
   hashSize: number;
-  init(): Hash;
-  update(msg: string | Uint8Array, inputEncoding?: string): Hash;
+  init(): _Hash;
+  update(msg: string | Uint8Array, inputEncoding?: string): _Hash;
   digest(outputEncoding?: string): string | Uint8Array;
 }
 ```
