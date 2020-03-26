@@ -12,7 +12,7 @@ console.log("HMAC-SHA256 example", hmac("sha256", "key", "msg", "utf8", "hex"));
 
 ## API
 
-#### `hmac(hash: string, key: string | Uint8Array, msg: string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
+#### `hmac(hash: HashType, key: string | Uint8Array, msg: string | Uint8Array, inputEncoding?: string, outputEncoding?: string): string | Uint8Array`
 
 Convenience function for macing singular data. `hash` should be one of `"sha1"`, `"sha256"`, or `"sha512"`, with the last two representing the respective SHA2 variants. If `key` or `msg` is a string, `inputEncoding` can be one of `"utf8"` (fallback), `"hex"`, or `"base64"`. `key` and `msg` must have the same encoding if they are both strings.
 

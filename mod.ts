@@ -1,20 +1,16 @@
 import { SHA1, SHA256, SHA512, encode } from "./deps.ts";
 
-const SHA1_REGEX: RegExp = /^\s*sha-?1\s*$/i;
-const SHA256_REGEX: RegExp = /^\s*sha-?256\s*$/i;
-const SHA512_REGEX: RegExp = /^\s*sha-?512\s*$/i;
-
-export enum HashType {
-  SHA1,
-  SHA256,
-  SHA512
+export enum Hash {
+  SHA1 = 'SHA1',
+  SHA256 = 'SHA256',
+  SHA512 = 'SHA512'
 }
 
 /** An interface representation of a hash algorithm implementation. */
-export interface Hash {
+interface _Hash {
   hashSize: number;
-  init(): Hash;
-  update(msg: string | Uint8Array, inputEncoding?: string): Hash;
+  init(): _Hash;
+  update(msg: string | Uint8Array, inputEncoding?: string): _Hash;
   digest(outputEncoding?: string): string | Uint8Array;
 }
 
@@ -27,10 +23,10 @@ export class HMAC {
 
   private iKeyPad!: Uint8Array;
   private oKeyPad!: Uint8Array;
-  private hasher: Hash;
+  private hasher: _Hash;
 
   /** Creates a new HMAC instance. */
-  constructor(hasher: Hash, key?: string | Uint8Array) {
+  constructor(hasher: _Hash, key?: string | Uint8Array) {
     this.hashSize = hasher.hashSize;
     this.hasher = hasher;
     this.B = this.hashSize <= 32 ? 64 : 128; // according to RFC4868
@@ -114,31 +110,31 @@ export class HMAC {
 
 /** Returns a HMAC of the given msg and key using the indicated hash. */
 export function hmac(
-  hash: HashType,
+  hash: Hash,
   key: string | Uint8Array,
   msg?: string | Uint8Array,
   inputEncoding?: string,
   outputEncoding?: string
 ): string | Uint8Array {
   switch(hash) {
-    case HashType.SHA1:
+    case Hash.SHA1:
       return new HMAC(new SHA1())
         .init(key, inputEncoding)
         .update(msg, inputEncoding)
         .digest(outputEncoding);
-    case HashType.SHA256:
+    case Hash.SHA256:
       return new HMAC(new SHA256())
         .init(key, inputEncoding)
         .update(msg, inputEncoding)
         .digest(outputEncoding);
-    case HashType.SHA512:
+    case Hash.SHA512:
       return new HMAC(new SHA512())
         .init(key, inputEncoding)
         .update(msg, inputEncoding)
         .digest(outputEncoding);
     default:
       throw new TypeError(
-        `Unsupported hash ${hash}. Must be one of SHA(1|256|512).`
+        `Unsupported hash ${hash}. Must be one of (${Object.keys(Hash).join('|')})`
       );
   }
 }

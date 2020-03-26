@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { hmac, HashType } from "./mod.ts";
+import { hmac, Hash } from "./mod.ts";
 import { encode } from "./deps.ts";
 
 interface TestVector {
@@ -49,7 +49,7 @@ testVectors["HMAC-SHA1"].forEach(
     Deno.test({
       name: `HMAC-SHA1 ${i}`,
       fn(): void {
-        const mac: any = hmac(HashType.SHA1, key, msg);
+        const mac: any = hmac(Hash.SHA1, key, msg);
 
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
@@ -65,7 +65,7 @@ testVectors["HMAC-SHA256"].forEach(
     Deno.test({
       name: `HMAC-SHA256 ${i}`,
       fn(): void {
-        const mac: any = hmac(HashType.SHA256, key, msg);
+        const mac: any = hmac(Hash.SHA256, key, msg);
 
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
@@ -81,7 +81,7 @@ testVectors["HMAC-SHA512"].forEach(
     Deno.test({
       name: `HMAC-SHA512 ${i}`,
       fn(): void {
-        const mac: any = hmac(HashType.SHA512, key, msg);
+        const mac: any = hmac(Hash.SHA512, key, msg);
 
         assertEquals(mac.subarray(0, macByteLength), expectedMac);
       }
