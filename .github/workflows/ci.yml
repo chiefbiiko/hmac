@@ -10,9 +10,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - name: clone repo
-        uses: actions/checkout@v2.0.0
-      - name: install deno
-        uses: denolib/setup-deno@v1.2.0
-      - name: run tests
-        run: deno test
+      - uses: actions/checkout@v2.0.0
+      - uses: denolib/setup-deno@v2
+        with:
+          deno-version: v1.5.2
+      - run: deno test --allow-read=./test_vectors.json
