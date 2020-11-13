@@ -1,4 +1,4 @@
-import { hmac } from "https://denopkg.com/chiefbiiko/hmac@v1.0.2/mod.ts";
+import { hmac } from "./mod.ts";
 
 console.log(
   "HMAC-SHA256 example",
